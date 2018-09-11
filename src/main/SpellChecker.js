@@ -7,6 +7,8 @@ import EventEmitter from 'events';
 
 import simpleSpellChecker from 'simple-spellchecker';
 
+import path from 'path';
+import fs from 'fs';
 /// Following approach for contractions is derived from electron-spellchecker.
 
 // NB: This is to work around electron/electron#1005, where contractions
@@ -30,6 +32,18 @@ const contractionMap = contractions.reduce((acc, word) => {
 }, {});
 
 /// End: derived from electron-spellchecker.
+
+const localeNames = {
+    'en-GB': 'English (GB)',
+    'en-US': 'English (US)',
+    'fr-FR': 'French',
+    'de-DE': 'German',
+    'es-ES': 'Spanish (ES)',
+    'es-MX': 'Spanish (MX)',
+    'nl-NL': 'Dutch',
+    'pt-BR': 'Portuguese (BR)',
+    'pl-PL': 'Polish'
+};
 
 export default class SpellChecker extends EventEmitter {
   constructor(locale, dictDir, callback) {
@@ -70,6 +84,7 @@ export default class SpellChecker extends EventEmitter {
   }
 
   getSuggestions(word, maxSuggestions) {
+    console.log("looking for sugestions for",word,"in dict ",this.dict);
     const suggestions = this.dict.getSuggestions(word, maxSuggestions);
 
     const firstCharWord = word.charAt(0);
@@ -110,5 +125,22 @@ SpellChecker.getSpellCheckerLocale = (electronLocale) => {
   if (electronLocale.match(/^pt-?/)) {
     return 'pt-BR';
   }
+  if (electronLocale.match(/^pl-?/)) {
+    return 'pl-PL';
+  }
   return 'en-US';
 };
+
+SpellChecker.getAvailDicts = (dictDir) => {
+  return fs.readdirSync(dictDir)
+    .filter((name) => name.endsWith(".dic"))
+    .map((name) => {
+        const localeSymbol = path.parse(name)['name'];
+        if (localeSymbol in localeNames) {
+            return {language: localeNames[localeSymbol], locale: localeSymbol};
+        } else {
+            return {language: "Other (" + localeSymbol + ") ", locale: localeSymbol};
+        }
+    });
+};
+

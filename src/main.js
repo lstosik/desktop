@@ -632,6 +632,9 @@ app.on('ready', () => {
         });
     }
   });
+  ipcMain.on('list-dict', (event) => {
+    event.returnValue = SpellChecker.getAvailDicts(path.resolve(app.getAppPath(), 'node_modules/simple-spellchecker/dict'));
+  });
   ipcMain.on('checkspell', (event, word) => {
     let res = null;
     if (config.useSpellChecker && spellChecker.isReady() && word !== null) {
