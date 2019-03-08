@@ -26,10 +26,7 @@ function getSpellCheckerLocaleMenus(onSelectSpellCheckerLocale) {
     {language: 'English (US)', locale: 'en-US'},
     {language: 'French', locale: 'fr-FR'},
     {language: 'German', locale: 'de-DE'},
-    {language: 'Portuguese (BR)', locale: 'pt-BR'},
-    {language: 'Spanish (ES)', locale: 'es-ES'},
-    {language: 'Spanish (MX)', locale: 'es-MX'},
-    {language: 'Dutch', locale: 'nl-NL'},
+    {language: 'Polish', locale: 'pl-PL'},
   ];
   return locales.map((l) => ({
     label: l.language,

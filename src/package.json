@@ -13,6 +13,7 @@
     "bootstrap": "^3.3.7",
     "electron-context-menu": "0.9.0",
     "electron-devtools-installer": "^2.2.4",
+    "electron-hunspell": "^0.1.1",
     "electron-is-dev": "^0.3.0",
     "electron-squirrel-startup": "^1.0.0",
     "prop-types": "^15.6.1",
