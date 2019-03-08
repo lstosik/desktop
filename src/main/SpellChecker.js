@@ -6,6 +6,11 @@
 import EventEmitter from 'events';
 
 import simpleSpellChecker from 'simple-spellchecker';
+ 
+import path from 'path';
+import fs from 'fs';
+import { loadModule } from 'hunspell-asm';
+
 
 /// Following approach for contractions is derived from electron-spellchecker.
 
@@ -34,26 +39,42 @@ const contractionMap = contractions.reduce((acc, word) => {
 export default class SpellChecker extends EventEmitter {
   constructor(locale, dictDir, callback) {
     super();
-    this.dict = null;
+    this.hunspell = null;
     this.locale = locale;
-    simpleSpellChecker.getDictionary(locale, dictDir, (err, dict) => {
-      if (err) {
-        this.emit('error', err);
-        if (callback) {
-          callback(err);
-        }
-      } else {
-        this.dict = dict;
-        this.emit('ready');
+      console.log("looking for dicts in directory:", dictDir);
+      try {
+        
+           
+      var file1 = dictDir+"/"+locale+".dic";
+      var file2 = dictDir+"/"+locale+".aff";
+      if (!fs.existsSync(file1) || !fs.existsSync(file2)) {
+        console.log('nie istnieje ' + file1 + ' lub ' + file2 + ' zmieniam na pl_PL zamiast ' + locale);
+        locale = "pl_PL";
+        file1 = dictDir + "/" + locale + ".dic";
+        file2 = dictDir + "/" + locale + ".aff";
+      }
+      loadModule().then(factory=>{var virt = factory.mountDirectory(dictDir);
+        console.log("teraz czas na fabryke ", factory,virt);
+       var hunspell = factory.create(virt+"/"+locale+".aff",virt+"/"+ locale+".dic");
+       this.hunspell = hunspell;
+          console.log("czy to poprawny wyraz ", hunspell.spell("woda"));   
+          })
+            .then(value => {
+      this.emit('ready');
         if (callback) {
           callback(null, this);
         }
-      }
-    });
+      })
+        .catch(ex=>console.log("error loading dictionary", ex));
+      
+    } catch (exception) {
+      console.log("error loading dictionary", exception);
+    }
+
   }
 
   isReady() {
-    return this.dict !== null;
+    return  this.hunspell !== null;
   }
 
   spellCheck(word) {
@@ -66,12 +87,12 @@ export default class SpellChecker extends EventEmitter {
     if (this.locale.match(/^en-?/) && contractionMap[word]) {
       return true;
     }
-    return this.dict.spellCheck(word);
+    return this.hunspell.spell(word);
   }
 
   getSuggestions(word, maxSuggestions) {
-    const suggestions = this.dict.getSuggestions(word, maxSuggestions);
-
+    const suggestions = this.hunspell.suggest(word);
+    // dictionary doesn't contain capitalized words, that causes false positives for first eord in sentence.
     const firstCharWord = word.charAt(0);
     let i;
     for (i = 0; i < suggestions.length; i++) {
@@ -117,4 +138,24 @@ SpellChecker.getSpellCheckerLocale = (electronLocale) => {
     return 'it-IT';
   }
   return 'en-US';
+};
+SpellChecker.getAvailDicts = (dictDir) => {
+  console.log("getAvailDicts looking for dicts in directory:", dictDir);
+  return fs.readdirSync(dictDir)
+    .filter((name) => name.endsWith(".dic"))
+    .filter((name) => {
+      const localeSymbol = path.parse(name)['name'];
+      console.log("checking for "
+        , dictDir + "/" + localeSymbol + ".aff");
+      return fs.existsSync(dictDir + "/" + localeSymbol + ".aff");
+    })
+    .map((name) => {
+        console.log("found dictionary "+name);
+        const localeSymbol = path.parse(name)['name'];
+        if (localeSymbol in localeNames) {
+            return {language: localeNames[localeSymbol], locale: localeSymbol};
+        } else {
+            return {language: "Other (" + localeSymbol + ") ", locale: localeSymbol};
+        }
+    });
 };

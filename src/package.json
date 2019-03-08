@@ -25,6 +25,7 @@
     "react-transition-group": "^2.5.0",
     "semver": "^5.5.0",
     "simple-spellchecker": "^0.9.8",
+    "electron-hunspell": "^0.1.1",
     "underscore": "^1.9.1",
     "valid-url": "^1.0.9",
     "winreg": "^1.2.4",
