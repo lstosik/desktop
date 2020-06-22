@@ -17,7 +17,7 @@
     "browser/assets/fonts/*",
     "node_modules/bootstrap/dist/**",
     "node_modules/font-awesome/{css,fonts}/**",
-    "node_modules/simple-spellchecker/dict/*.dic"
+    "node_modules/bootstrap/dist/**"
   ],
   "protocols": [
     {
@@ -35,13 +35,13 @@
   "linux": {
     "category": "Network;InstantMessaging",
     "target": [
-      "deb",
-      "tar.gz",
-      "appimage"
+      "tar.gz"
     ],
     "extraFiles": [
       {
         "filter": [
+          "src/assets/dicts/*.dic",
+          "src/assets/dicts/*.aff",
           "LICENSE.txt",
           "NOTICE.txt"
         ]
@@ -59,13 +59,14 @@
   "mac": {
     "category": "public.app-category.productivity",
     "target": [
-      "zip",
-      "dmg"
+      "zip"
     ],
     "darkModeSupport": true,
     "extraResources": [
       {
         "filter": [
+          "src/assets/dicts/*.dic",
+          "src/assets/dicts/*.aff",
           "LICENSE.txt",
           "NOTICE.txt"
         ]
@@ -103,6 +104,8 @@
     "extraFiles": [
       {
         "filter": [
+          "src/assets/dicts/*.dic",
+          "src/assets/dicts/*.aff",
           "LICENSE.txt",
           "NOTICE.txt"
         ]

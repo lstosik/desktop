@@ -953,7 +953,7 @@ function handleUpdateDictionaryEvent(_, localeSelected) {
     try {
       spellChecker = new SpellChecker(
         locale,
-        path.resolve(app.getAppPath(), 'assets/dicts/'),
+        './src/assets/dicts/',
         (err) => {
           if (err) {
             log.error(err);
