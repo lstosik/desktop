@@ -10,8 +10,7 @@
     "main_bundle.js",
     "browser/**/*{.html,.css,_bundle.js}",
     "assets/**/*",
-    "node_modules/bootstrap/dist/**",
-    "node_modules/simple-spellchecker/dict/*.dic"
+    "node_modules/bootstrap/dist/**"
   ],
   "protocols": [
     {
@@ -25,13 +24,13 @@
   "linux": {
     "category": "Network;InstantMessaging",
     "target": [
-      "deb",
-      "tar.gz",
-      "appimage"
+      "tar.gz"
     ],
     "extraFiles": [
       {
         "filter": [
+          "src/assets/dicts/*.dic",
+          "src/assets/dicts/*.aff",
           "LICENSE.txt",
           "NOTICE.txt"
         ]
@@ -49,12 +48,13 @@
   "mac": {
     "category": "public.app-category.productivity",
     "target": [
-      "zip",
-      "dmg"
+      "zip"
     ],
     "extraResources": [
       {
         "filter": [
+          "src/assets/dicts/*.dic",
+          "src/assets/dicts/*.aff",
           "LICENSE.txt",
           "NOTICE.txt"
         ]
@@ -72,12 +72,13 @@
   },
   "win": {
     "target": [
-      "squirrel",
       "zip"
     ],
     "extraFiles": [
       {
         "filter": [
+          "src/assets/dicts/*.dic",
+          "src/assets/dicts/*.aff",
           "LICENSE.txt",
           "NOTICE.txt"
         ]

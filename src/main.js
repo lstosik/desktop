@@ -605,7 +605,7 @@ app.on('ready', () => {
     if (config.useSpellChecker) {
       spellChecker = new SpellChecker(
         config.spellCheckerLocale,
-        path.resolve(app.getAppPath(), 'assets/dicts/'),
+        './src/assets/dicts/',
         (err) => {
           if (err) {
             console.error(err);
