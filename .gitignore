@@ -3,6 +3,7 @@ Thumbs.db
 *.log
 
 node_modules/
+nbproject/
 *_bundle.js
 release/
 npm-debug.log*
